@@ -47,15 +47,14 @@ button:active {
     background-color: #A9FB11;
     color: #0B7990;
 }
-
-.display{
+#display{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.score, .board {
+#score, #board {
     margin: 0;
     margin-bottom: 5px;
 }

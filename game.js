@@ -1,67 +1,87 @@
 const variants = ["rock","paper","scissors"];
+const choises = document.getElementsByTagName("button");
+const whiteBoard = document.querySelector("#board");
+let pScore = 0;
+let cScore = 0;
 
 function getComputerChoice() {
     let choise = Math.floor(Math.random() * 3)
     return variants[choise];
 }
 
-function playerSelection() {
-    let choise = prompt("Choose rock/paper/scissors");
-    while (variants.includes(choise) === false) {
-        choise = prompt("Choose rock/paper/scissors");
+function restartGame() {
+    pScore = 0;
+    cScore = 0;
+    const scoreBoard = document.querySelector("#score");
+    scoreBoard.textContent = "Player "+ pScore + " - " + cScore + " Computer";
+    document.querySelector(".playAgain").remove();
+    whiteBoard.textContent = "Best of 5, choose rock/paper/scissors";
+    for(let i = 0; i < choises.length; i++) {
+        choises[i].addEventListener("click", playRound);
     }
-    return choise.toLowerCase();
 }
 
-function playRound(playerSelection, computerChoice) {
+function playRound(event) {
+    let computerChoice = getComputerChoice();
+    let playerSelection = event.target.id;
+    const scoreBoard = document.querySelector("#score");
+
     if(playerSelection === computerChoice) {
-        return "It's a draw!";
+        whiteBoard.textContent = "It's a draw!";
     }
     else {
         switch (playerSelection) {
             case "rock":
                 if (computerChoice === "scissors") {
-                    return "You win, rock beats scissors!";
+                    whiteBoard.textContent = "You win, rock beats scissors!";
+                    ++pScore; 
                 }
                 else {
-                    return "You lose, paper beats rock!";
+                    whiteBoard.textContent = "You lose, paper beats rock!";
+                    ++cScore;
                 }
                 break;
             case "paper":
                 if (computerChoice === "rock") {
-                    return "You win, paper beats rock!";
+                    whiteBoard.textContent = "You win, paper beats rock!";
+                    ++pScore;
                 }
                 else {
-                    return "You lose, scissors beats paper!";
+                    whiteBoard.textContent = "You lose, scissors beats paper!";
+                    ++cScore;
                 }
                 break;
             case "scissors":
                 if (computerChoice === "paper") {
-                    return "You win, scissors beats paper!";
+                    whiteBoard.textContent = "You win, scissors beats paper!";
+                    ++pScore;
                 }
                 else {
-                    return "You lose, rock beats scissors!";
+                    whiteBoard.textContent = "You lose, rock beats scissors!";
+                    ++cScore;
                 }
                 break;
         }
-    }
-}
-function game() {
-    let pScore = 0;
-    let cScore = 0;
-    console.log("Welcome to rock/paper/scissors game (best of 5)");
-    console.log(pScore.toString() + " - " + cScore.toString() + " (Player - Computer)");
-    for(let i = 0; i < 5; i++) {
-        let winningStatement = playRound(playerSelection(), getComputerChoice());
-        if (winningStatement.includes("You win")) {
-            pScore += 1; 
+        scoreBoard.textContent = "Player "+ pScore + " - " + cScore + " Computer";
+        if (pScore == 5 || cScore == 5) {
+            if (pScore == 5) {
+                whiteBoard.textContent = "You win!!!!! You have beaten the computer!!!";
+            }
+            if (cScore == 5) {
+                whiteBoard.textContent = "You lose.... Humanity lost all it's hope..";
+            }
+            const playAgain = document.createElement("button");
+            document.querySelector("#display").appendChild(playAgain);
+            playAgain.textContent ="Play Again?";
+            playAgain.className = "playAgain";
+            playAgain.addEventListener("click", restartGame);
+            for(let i = 0; i < choises.length; i++) {
+                choises[i].removeEventListener("click", playRound);
+            }
         }
-        else if (winningStatement.includes("You lose")) {
-            cScore +=1;
-        }
-        console.log(winningStatement);
-        console.log(pScore.toString() + " - " + cScore.toString() + " (Player - Computer)");
     }
 }
 
-game();
+for(let i = 0; i < choises.length; i++) {
+    choises[i].addEventListener("click", playRound);
+}
